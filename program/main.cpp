@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     hlayout_openfile_and_visualpath->addWidget(openfile);
 
     QPushButton *visualize = new QPushButton(widget);
-    visualize->setText(QStringLiteral("visualize"));
+    visualize->setText(QStringLiteral("visualie"));
     vLayout->addLayout(hlayout_openfile_and_visualpath);
     vLayout->addWidget(visualize);
 
