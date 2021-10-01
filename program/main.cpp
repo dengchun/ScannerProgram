@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     QHBoxLayout *hlayout_openfile_and_visualpath = new QHBoxLayout();
     QPushButton *openfile = new QPushButton(widget);
-    openfile->setText(QStringLiteral("openfile"));
+    openfile->setText(QStringLiteral("open"));
     QLineEdit *lineedit_visualpath = new QLineEdit();
     hlayout_openfile_and_visualpath->addWidget(lineedit_visualpath);
     hlayout_openfile_and_visualpath->addWidget(openfile);
