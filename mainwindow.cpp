@@ -15,10 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    initMap();
-    initCharts();
-    inittable();
-    QObject::connect(select_z, SIGNAL(currentTextChanged(QString)), this,SLOT(rePrintChart()));
+
 
 }
 
@@ -33,10 +30,7 @@ void MainWindow::openfile()
     QString filepath = QFileDialog::getOpenFileName(this,"open file","D:\\");
     std::cout<<filepath.toStdString().data()<<std::endl;
     f = filepath;
-    lineedit_visualpath->setText(filepath);
-    visualize();
 
-    //郑博：：
     QStringList str;
     inf.file_name=f;
     str=inf.file_name.split("/");
@@ -46,7 +40,7 @@ void MainWindow::openfile()
     inf.PARTCOUNT=str.at(0);
     //str.at(1);
     inf.test_time=str.at(2);
-    //inf.test_time=inf.test_time.mid(0,2)+"年"+inf.test_time.mid(2,2)+"月"+inf.test_time.mid(4,2)+"日"+"\t"+inf.test_time.mid(6,2)+":"+inf.test_time.mid(8,2)+":"+inf.test_time.mid(10,2);
+    inf.test_time=inf.test_time.mid(0,2)+"年"+inf.test_time.mid(2,2)+"月"+inf.test_time.mid(4,2)+"日"+"\t"+inf.test_time.mid(6,2)+":"+inf.test_time.mid(8,2)+":"+inf.test_time.mid(10,2);
     //str.at(3);
     qDebug()<<inf.file_name<<endl;
 }
@@ -59,6 +53,7 @@ void MainWindow::visualize()
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QList<QPointF> listPoint;
     while(!file.atEnd()){
+
         QPointF pointf;
         double zuobiao[3];
         QString line = file.readLine();
@@ -68,55 +63,42 @@ void MainWindow::visualize()
         pointf.setX(str.at(0).toFloat());
         pointf.setY(str.at(1).toFloat());
         listPoint << pointf;
+
         zuobiao[0] = str.at(0).toFloat();
         zuobiao[1] = str.at(1).toFloat();
         zuobiao[2] = str.at(2).toFloat();
-
-        selectInterface.insert(zuobiao[2]);
         *data << QVector3D(zuobiao[0], zuobiao[1], zuobiao[2]);
     }
-    float interfa;
-    foreach(interfa,selectInterface){
-        qDebug()<<interfa<<endl;
-    }
     m_3Dseries->dataProxy()->resetArray(data);
-    m_3Dseries->setBaseColor(QColor(255,0,0));//设置点的颜色
+    m_3Dseries->setBaseColor(QColor(255,255,255));//设置点的颜色
     m_scatterSeries->replace(listPoint);
+    file.close();
+    containerChart->setChart(m_chart);
+
 }
 
 void MainWindow::initMap()
 {
     m_3Dgraph = new Q3DScatter();
-
-    m_3Dgraph->scene()->activeCamera()->setYRotation(90);
-    m_3Dgraph->scene()->activeCamera()->setZoomLevel(200.0f);
     container = QWidget::createWindowContainer(m_3Dgraph);
-
-    QValue3DAxis *m_Z_Axis = new QValue3DAxis;
-    QValue3DAxis *m_X_Axis = new QValue3DAxis;
-    QValue3DAxis *m_Y_Axis = new QValue3DAxis;
-
-    Q3DTheme *currentTheme = m_3Dgraph->activeTheme();
-    currentTheme->setLabelBackgroundEnabled(true);
-    color.setRgb(70,70,70);
-    currentTheme->setBackgroundColor(color);
-    currentTheme->setWindowColor(color);
     QScatterDataProxy *proxy = new QScatterDataProxy();
     m_3Dseries = new QScatter3DSeries(proxy);
     m_3Dseries->setMeshSmooth(true);
     m_3Dgraph->addSeries(m_3Dseries);
     //创建坐标轴
-
-    m_Z_Axis->setTitle("Height");
-    m_Z_Axis->setTitleVisible(true);
-    m_Z_Axis->setAutoAdjustRange(true);
-
-
-    m_3Dgraph->setAxisX(m_X_Axis);
-    m_3Dgraph->setAxisY(m_Y_Axis);
-    m_3Dgraph->setAxisZ(m_Z_Axis);
+    m_3Dgraph->axisX()->setTitle("axis X");
+    m_3Dgraph->axisX()->setTitleVisible(true);
+    m_3Dgraph->axisX()->setRange(-30,30);
+    m_3Dgraph->axisY()->setTitle("axis Y");
+    m_3Dgraph->axisY()->setTitleVisible(true);
+    m_3Dgraph->axisY()->setRange(-30,30);
+    m_3Dgraph->axisZ()->setTitle("axis Z");
+    m_3Dgraph->axisZ()->setTitleVisible(true);
+    m_3Dgraph->axisZ()->setRange(50,60);
     m_3Dgraph->activeTheme()->setLabelBackgroundEnabled(false);
+    m_3Dgraph->activeTheme()->setBackgroundColor(QColor(90,90,90));//设置背景色
     m_3Dgraph->setShadowQuality(QAbstract3DGraph::ShadowQualityNone);
+
     QtDataVisualization::QScatterDataArray data;
     QFile file(f);
     qDebug()<<f<<endl;
@@ -125,24 +107,22 @@ void MainWindow::initMap()
         QString line = file.readLine();
         QStringList str;
         QString s;
+        float value;
         str=line.split("\t");
         double zuobiao[3];
-        zuobiao[0] = str.at(0).toFloat();
-        zuobiao[1] = str.at(1).toFloat();
-        zuobiao[2] = str.at(2).toFloat();
-        selectInterface.insert(zuobiao[2]);
+        for(int i = 0;i<3;i++)
+           {
+               s = str.at(i);         //获取字符串集合的元素
+               value = s.toFloat();    //转为float类型
+
+               zuobiao[i]=value;
+           }
         data << QVector3D(zuobiao[0], zuobiao[1], zuobiao[2]);
     }
-
-    float interfa;
-    foreach(interfa,selectInterface){
-        qDebug()<<interfa<<endl;
-        select_z->addItem(QString::number(interfa));
-    }
-    m_3Dseries->setMesh(QAbstract3DSeries::MeshBar);//数据点为圆球
+    m_3Dseries->setMesh(QAbstract3DSeries::MeshSphere);//数据点为圆球
     m_3Dseries->setSingleHighlightColor(QColor(0,0,255));//设置点选中时的高亮颜色
-    m_3Dseries->setBaseColor(QColor(255,0,0));//设置点的颜色
-    m_3Dseries->setItemSize(0.005);//设置点的大小
+    m_3Dseries->setBaseColor(QColor(0,255,255));//设置点的颜色
+    m_3Dseries->setItemSize(0.01);//设置点的大小
     m_3Dseries->dataProxy()->addItems(data);
 }
 
@@ -151,7 +131,6 @@ void MainWindow::initCharts()
     containerChart = new QChartView(this);
     m_chart = new QChart();
     m_scatterSeries = new QScatterSeries(m_chart);
-    m_chart->setTheme(QChart::ChartThemeDark);
     m_scatterSeries->setUseOpenGL(true);            //启用OpenGL，否则可能会很卡顿
     m_scatterSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);//设置散点样式
     m_scatterSeries->setMarkerSize(1);              //设置散点大小
@@ -176,39 +155,14 @@ void MainWindow::initCharts()
     m_scatterSeries->replace(listPoint);
     m_chart->createDefaultAxes();
     m_chart->axes(Qt::Horizontal).first()->setRange(-30, 30); //设置水平坐标范围
-    m_chart->axes(Qt::Vertical).first()->setRange(-50, 50);       //设置垂直坐标范围
+    m_chart->axes(Qt::Vertical).first()->setRange(-30, 30);       //设置垂直坐标范围
     m_chart->legend()->hide();                                    //隐藏图例
     containerChart->setChart(m_chart);
-
-    //郑博：：
     containerChart->winId();     //添加此句之后bug消失
-
-    //瑶博：：
     containerChart->setRubberBand(QChartView::RectangleRubberBand);//用鼠标拉出矩形放大框
+
 }
-
-void MainWindow::rePrintChart(){
-    QFile file(f);
-    qDebug()<<f<<endl;
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QList<QPointF> listPoint;
-    while(!file.atEnd()){
-        QPointF pointf;
-        QString line = file.readLine();
-        QStringList str;
-        QString s;
-        str=line.split("\t");
-        pointf.setX(str.at(0).toFloat());
-        pointf.setY(str.at(1).toFloat());
-
-        if(str.at(2).toFloat()==select_z->currentText().toFloat()){
-            listPoint << pointf;
-        }
-    }
-    m_scatterSeries->replace(listPoint);
-}
-
-//郑博：：
+//在PDF中构建表格
 void MainWindow::pdfDrawForm(QPainter* paint,int y,int horzBorder,int row,int column,int unitHeight,QFont &font,QStringList& list)
 {
     paint->setFont(font);
@@ -236,6 +190,7 @@ void MainWindow::pdfDrawForm(QPainter* paint,int y,int horzBorder,int row,int co
     }
 
 }
+
 void MainWindow::export_report()
 {
     QString fileName = QFileDialog::getSaveFileName(this,"Select Save Location","C://Users/me/Desktop/report.pdf","pdf Files (*.pdf)");
@@ -264,7 +219,9 @@ void MainWindow::export_report()
     int fontSize = 22;
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
-    pdfPainter->drawText(QRect(0, iTop, iContentWidth, 90), "叶片检测结果报告", option);
+    pdfPainter->drawText(QRect( 0, iTop, iContentWidth, 90), "叶片检测结果报告",option); //QRect(int x, int y, int width, int height)
+
+
     int nPDFWidth = pdfPainter->viewport().width();     //页面宽度
     int nPDFHeight = pdfPainter->viewport().height();   //页面高度
 
@@ -281,7 +238,7 @@ void MainWindow::export_report()
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
     pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), "零件名称: %1");
-    pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("检测时间: %1").arg(inf.test_time));
+    pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("文件名称: %1").arg(inf.file_name));
     iTop+=90;
 
 
@@ -293,7 +250,7 @@ void MainWindow::export_report()
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),"CLOCK NUMBER: %1");
     iTop+=110;
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), QString("文件名称: %1").arg(inf.file_name));
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), QString("检测时间: %1").arg(inf.test_time));
     iTop+=110;
 
     pdfPainter->drawLine(0,iTop,nPDFWidth,iTop);   //画横线
@@ -343,6 +300,16 @@ void MainWindow::export_report()
     //QPixmap pixmap = containerChart->grab();//containerChart存储2维图像
     QPixmap pixmap = screen->grabWindow(containerChart->winId());
 
+    //QPixmap pixmap=QPixmap::grabWindow(QApplication::desktop()->winId(), 0,0,500,500);//截图整个屏幕
+    //QPixmap pixmap=QPixmap::grabWindow(QApplication::desktop()->winId(), 11,361,892,343);
+
+    //qDebug()<<containerChart->rect(); //返回组件的大小
+    //qDebug()<<containerChart->pos();   //返回在窗口中的相对位置
+    //QPoint point = container->mapToGlobal(QPoint(container->x(), container->y()));
+    //qDebug() << point.x() << point.y() << endl;
+    //QPixmap pixmap=screen->grabWindow(QApplication::desktop()->winId(), 11,361,892,343);
+
+
 
 
     float x = (float)(nPDFWidth-imageBorder*2)/(float)pixmap.width();
@@ -376,7 +343,7 @@ void MainWindow::export_report()
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
     pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), "零件名称: %1");
-    pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("检测时间: %1").arg(inf.test_time));
+    pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("文件名称: %1").arg(inf.file_name));
     iTop+=90;
 
 
@@ -388,7 +355,7 @@ void MainWindow::export_report()
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),"CLOCK NUMBER: %1");
     iTop+=110;
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), QString("文件名称: %1").arg(inf.file_name));
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), QString("检测时间: %1").arg(inf.test_time));
     iTop+=110;
 
     pdfPainter->drawLine(0,iTop,nPDFWidth,iTop);   //画横线
@@ -441,6 +408,7 @@ void MainWindow::export_report()
     delete pdfWriter;
     pdfFile.close();
 }
+
 void MainWindow::inittable(){
     table_1->horizontalHeader()->setVisible(false);//表头不可见
     table_1->verticalHeader()->setVisible(false);//表头不可见
@@ -479,6 +447,13 @@ void MainWindow::inittable(){
     table_1->setItem(6,2,new QTableWidgetItem("TE 最小值"));
     table_1->setItem(6,3,new QTableWidgetItem("TE 最大值"));
     table_1->setItem(6,4,new QTableWidgetItem("BOW 总数"));
+
+
+
+
+
+
+
 
     table_2->setColumnCount(7);//设置列数
     table_2->setRowCount(5);//设置行数

@@ -8,11 +8,8 @@
 #include <QDebug>
 #include <QPointF>
 #include <QSplitter>
-#include <QSet>
-#include <QList>
 
 #include <QChartView>
-#include <QComboBox>
 #include <QtCharts>
 #include <QtCharts/QScatterSeries>
 
@@ -32,23 +29,18 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-
+    void initMap();
+    void initCharts();
     Q3DScatter *m_3Dgraph;
     QScatter3DSeries *m_3Dseries;
     QWidget *container;
     QChart *m_chart;
     QScatterSeries *m_scatterSeries; //散点类型
-    QChartView *containerChart;
-    QString f = "C:\\Users\\dengchun\\Desktop\\partN_0000_210913134725_TPscan.txt";
-    QLineEdit *lineedit_visualpath = new QLineEdit();
-    QComboBox *select_z = new QComboBox();
-    QSet<float> selectInterface;
-    QColor color;
-
-    //郑博：：
+    QChartView *containerChart;  //存储二位叶片图像
+    QString f = "C:\\Users\\dengchun\\Desktop\\data0909_1.txt";
     void pdfDrawForm(QPainter* paint,int y,int horzBorder,int row,int column,int unitHeight,QFont &font,QStringList& list);//新加
     void export_report();//新加
-
+    ~MainWindow();
     QTableWidget *table_1 = new QTableWidget(this);
     QTableWidget *table_2 = new QTableWidget(this);
     void inittable();
@@ -108,16 +100,12 @@ public:
             QString TE_MEAN;
             QString TE_STANDARD;
     }inf;
-    ~MainWindow();
+
 public Q_SLOTS:
     void openfile();
-    void visualize();
-    void initMap();
-    void initCharts();
-    void rePrintChart();
-
-    //郑博：：
     void settable();
+    void visualize();
+
 
 
 private:
