@@ -47,11 +47,13 @@ void MainWindow::openfile()
     inf.test_time=str.at(2);
     inf.test_time=inf.test_time.mid(0,2)+"年"+inf.test_time.mid(2,2)+"月"+inf.test_time.mid(4,2)+"日"+"\t"+inf.test_time.mid(6,2)+":"+inf.test_time.mid(8,2)+":"+inf.test_time.mid(10,2);
     //str.at(3);
-    qDebug()<<inf.file_name<<endl;
+    //qDebug()<<inf.file_name<<endl;
 }
 
 void MainWindow::visualize()
 {
+    QSet<float> selectInterface;
+
     QtDataVisualization::QScatterDataArray *data = new QScatterDataArray();
     QFile file(f);
     qDebug()<<f<<endl;
@@ -75,8 +77,10 @@ void MainWindow::visualize()
         *data << QVector3D(zuobiao[0], zuobiao[1], zuobiao[2]);
     }
     float interfa;
+    select_z->clear();
     foreach(interfa,selectInterface){
         qDebug()<<interfa<<endl;
+        select_z->addItem(QString::number(interfa));
     }
     m_3Dseries->dataProxy()->resetArray(data);
     m_3Dseries->setBaseColor(QColor(255,0,0));//设置点的颜色
@@ -85,6 +89,8 @@ void MainWindow::visualize()
 
 void MainWindow::initMap()
 {
+    QSet<float> selectInterface;
+
     m_3Dgraph = new Q3DScatter();
 
     m_3Dgraph->scene()->activeCamera()->setYRotation(90);
@@ -135,7 +141,6 @@ void MainWindow::initMap()
 
     float interfa;
     foreach(interfa,selectInterface){
-        qDebug()<<interfa<<endl;
         select_z->addItem(QString::number(interfa));
     }
     m_3Dseries->setMesh(QAbstract3DSeries::MeshBar);//数据点为圆球
@@ -188,7 +193,7 @@ void MainWindow::initCharts()
 
 void MainWindow::rePrintChart(){
     QFile file(f);
-    qDebug()<<f<<endl;
+    qDebug()<<"rePrintChart"<<endl;
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QList<QPointF> listPoint;
     while(!file.atEnd()){

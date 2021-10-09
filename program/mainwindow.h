@@ -41,7 +41,6 @@ public:
     QString f = "C:\\Users\\dengchun\\Desktop\\partN_0000_210913134725_TPscan.txt";
     QLineEdit *lineedit_visualpath = new QLineEdit();
     QComboBox *select_z = new QComboBox();
-    QSet<float> selectInterface;
     QColor color;
 
     //郑博：：
