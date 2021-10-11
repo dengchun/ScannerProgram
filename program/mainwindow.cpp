@@ -8,7 +8,6 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QPushButton>
 #include <QtGui/QScreen>
-#include <QScreen>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,7 +45,7 @@ void MainWindow::openfile()
     inf.PARTCOUNT=str.at(0);
     //str.at(1);
     inf.test_time=str.at(2);
-    //inf.test_time=inf.test_time.mid(0,2)+"年"+inf.test_time.mid(2,2)+"月"+inf.test_time.mid(4,2)+"日"+"\t"+inf.test_time.mid(6,2)+":"+inf.test_time.mid(8,2)+":"+inf.test_time.mid(10,2);
+    inf.test_time=inf.test_time.mid(0,2)+"年"+inf.test_time.mid(2,2)+"月"+inf.test_time.mid(4,2)+"日"+"\t"+inf.test_time.mid(6,2)+":"+inf.test_time.mid(8,2)+":"+inf.test_time.mid(10,2);
     //str.at(3);
     qDebug()<<inf.file_name<<endl;
 }
@@ -280,20 +279,20 @@ void MainWindow::export_report()
     fontSize = 16;
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), "零件名称: %1");
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), "零件名称: %1");
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("检测时间: %1").arg(inf.test_time));
     iTop+=90;
 
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), ("所选截面: %1"));
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), QString("所选截面: %1").arg(inf.section));
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("PARTCOUNT: %1").arg(inf.PARTCOUNT));
     iTop+=90;
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), "SERIAL NUMBER: %1");
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), "SERIAL NUMBER: %1");
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),"CLOCK NUMBER: %1");
     iTop+=110;
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), QString("文件名称: %1").arg(inf.file_name));
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), QString("文件名称: %1").arg(inf.file_name));
     iTop+=110;
 
     pdfPainter->drawLine(0,iTop,nPDFWidth,iTop);   //画横线
@@ -308,7 +307,7 @@ void MainWindow::export_report()
     fontSize = 15;
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
-    pdfPainter->drawText(QRect(0,iTop, nPDFWidth, 80), Qt::AlignVCenter | Qt::AlignLeft,"所选截面: %1");
+    pdfPainter->drawText(QRect(0,iTop, nPDFWidth, 80), Qt::AlignVCenter | Qt::AlignLeft,QString("所选截面: %1").arg(inf.section));
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth/2-100, 70),"单位：毫米");
     iTop+=150;
 
@@ -345,11 +344,12 @@ void MainWindow::export_report()
 
 
 
-    float x = (float)(nPDFWidth-imageBorder*2)/(float)pixmap.width();
+    //float x = (float)(nPDFWidth-imageBorder*2)/(float)pixmap.width();
+    //pixmap= pixmap.scaled(nPDFWidth-imageBorder*2, x*pixmap.height(),Qt::IgnoreAspectRatio);    //根据大小比例,来放大缩小图片
 
-    pixmap= pixmap.scaled(nPDFWidth-imageBorder*2, x*pixmap.height(),Qt::IgnoreAspectRatio);    //根据大小比例,来放大缩小图片
+    pixmap= pixmap.scaled(nPDFWidth-imageBorder*2,nPDFHeight-iTop,Qt::KeepAspectRatio); //改动
 
-    pdfPainter->drawPixmap(imageBorder, iTop, pixmap);
+    pdfPainter->drawPixmap((nPDFWidth-pixmap.width())/2, iTop, pixmap);  //改动
 
     iTop+=pixmap.height()+90;
 
@@ -375,20 +375,20 @@ void MainWindow::export_report()
     fontSize = 16;
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), "零件名称: %1");
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), "零件名称: %1");
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("检测时间: %1").arg(inf.test_time));
     iTop+=90;
 
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), ("所选截面: %1"));
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), QString("所选截面: %1").arg(inf.section));
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),QString("PARTCOUNT: %1").arg(inf.PARTCOUNT));
     iTop+=90;
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), "SERIAL NUMBER: %1");
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), "SERIAL NUMBER: %1");
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth, 70),"CLOCK NUMBER: %1");
     iTop+=110;
 
-    pdfPainter->drawText(QRect(100,iTop, nPDFWidth/2, 70), QString("文件名称: %1").arg(inf.file_name));
+    pdfPainter->drawText(QRect(100,iTop, nPDFWidth, 70), QString("文件名称: %1").arg(inf.file_name));
     iTop+=110;
 
     pdfPainter->drawLine(0,iTop,nPDFWidth,iTop);   //画横线
@@ -403,7 +403,7 @@ void MainWindow::export_report()
     fontSize = 15;
     font.setPointSize(fontSize);
     pdfPainter->setFont(font);
-    pdfPainter->drawText(QRect(0,iTop, nPDFWidth, 80), Qt::AlignVCenter | Qt::AlignLeft,"所选截面: %1");
+    pdfPainter->drawText(QRect(0,iTop, nPDFWidth, 80), Qt::AlignVCenter | Qt::AlignLeft,QString("所选截面: %1").arg(inf.section));
     pdfPainter->drawText(QRect(nPDFWidth/2+100,iTop, nPDFWidth/2-100, 70),"单位：毫米");
     iTop+=120;
 
@@ -504,6 +504,9 @@ void MainWindow::inittable(){
 
 }
 void MainWindow::getinformation(){
+    inf.section=select_z->currentText();
+
+
     inf.LE_RADIUS="0.228";
     inf.TE_RADIUS="0.325";
     inf.LE_THICK="1.441";

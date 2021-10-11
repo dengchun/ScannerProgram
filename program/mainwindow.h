@@ -10,7 +10,6 @@
 #include <QSplitter>
 #include <QSet>
 #include <QList>
-
 #include <QChartView>
 #include <QComboBox>
 #include <QtCharts>
