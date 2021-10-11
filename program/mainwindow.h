@@ -38,7 +38,8 @@ public:
     QChart *m_chart;
     QScatterSeries *m_scatterSeries; //散点类型
     QChartView *containerChart;
-    QString f = "C:\\Users\\dengchun\\Desktop\\partN_0000_210913134725_TPscan.txt";
+   // QString f = "C:\\Users\\dengchun\\Desktop\\partN_0000_210913134725_TPscan.txt";
+    QString f ;
     QLineEdit *lineedit_visualpath = new QLineEdit();
     QComboBox *select_z = new QComboBox();
     QSet<float> selectInterface;

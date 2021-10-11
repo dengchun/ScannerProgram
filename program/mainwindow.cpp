@@ -75,8 +75,10 @@ void MainWindow::visualize()
         *data << QVector3D(zuobiao[0], zuobiao[1], zuobiao[2]);
     }
     float interfa;
+    select_z->clear();
     foreach(interfa,selectInterface){
         qDebug()<<interfa<<endl;
+         select_z->addItem(QString::number(interfa));
     }
     m_3Dseries->dataProxy()->resetArray(data);
     m_3Dseries->setBaseColor(QColor(255,0,0));//设置点的颜色
