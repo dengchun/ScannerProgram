@@ -141,6 +141,7 @@ void MainWindow::initCharts()
     m_chart->axes(Qt::Vertical).first()->setRange(-30, 30);       //设置垂直坐标范围
     m_chart->legend()->hide();                                    //隐藏图例
     containerChart->setChart(m_chart);
+    containerChart->setRubberBand(QChartView::RectangleRubberBand);//用鼠标拉出矩形放大框
 
 }
 
