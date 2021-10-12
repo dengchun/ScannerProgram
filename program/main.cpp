@@ -67,9 +67,9 @@ int main(int argc, char *argv[])
     com_and_exp->addWidget(exportFile);
     exportFile->setText("export");
     aboutReport->addWidget(new QLabel("表格1"));
-    aboutReport->addWidget(w->table_1);
+    aboutReport->addWidget(w->table_2);   //交换了表格1和2
     aboutReport->addWidget(new QLabel("表格2"));
-    aboutReport->addWidget(w->table_2);
+    aboutReport->addWidget(w->table_1);
     vLayout->addLayout(aboutReport);
 
     QObject::connect(openfile,&QPushButton::clicked,w, &MainWindow::openfile);

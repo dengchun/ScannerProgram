@@ -444,51 +444,71 @@ void MainWindow::export_report()
     pdfFile.close();
 }
 void MainWindow::inittable(){
+
     table_1->horizontalHeader()->setVisible(false);//表头不可见
     table_1->verticalHeader()->setVisible(false);//表头不可见
     table_2->horizontalHeader()->setVisible(false);//表头不可见
     table_2->verticalHeader()->setVisible(false);//表头不可见
     table_1->setEditTriggers(QAbstractItemView::NoEditTriggers);//设置单元格不可编辑
     table_2->setEditTriggers(QAbstractItemView::NoEditTriggers);//设置单元格不可编辑
-    table_1->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//隐藏滚动条
+    //table_1->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//隐藏滚动条
     //table_2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);//隐藏滚动条
 
-    table_1->setColumnCount(5);//header5列
-    table_1->setRowCount(8);//header8行
+
+
+    QStringList m_Header;
+
+    table_1->setColumnCount(2);//header列
+    table_1->setRowCount(20);//header行
     table_1->setShowGrid(true);                //设置显示格子线
+    table_1->setStyleSheet("gridline-color: rgb(255, 255, 255)");
     //table_1->horizontalHeader()->setStretchLastSection(true);    //设置充满表宽度
-    table_1->resizeColumnsToContents();//根据内容自动改变列的大小
-    table_1->resizeRowsToContents();//根据内容自动改变行的大小
+    //table_1->resizeColumnsToContents();//根据内容自动改变列的大小
+    //table_1->resizeRowsToContents();//根据内容自动改变行的大小
     table_1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);// 自适应所有列，让它布满空间
-    table_1->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);// 自适应所有行，让它布满空间
+    //table_1->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);// 自适应所有行，让它布满空间
+    table_1->setFont(QFont("song", 14));//所有单元格的字体  设置成一样
+    for(int rows=0;rows<20;rows++)
+       table_1->setRowHeight(rows,30);
+    table_1->setSelectionMode(QAbstractItemView::NoSelection);//设置表格不可被选中
     table_1->setItem(0,0,new QTableWidgetItem("LE RADIUS"));
-    table_1->setItem(0,1,new QTableWidgetItem("TE RADIUS"));
-    table_1->setItem(0,2,new QTableWidgetItem("LE THICK"));
-    table_1->setItem(0,3,new QTableWidgetItem("TE THICK"));
-    table_1->setItem(0,4,new QTableWidgetItem("MAC THICK"));
-    table_1->setItem(2,0,new QTableWidgetItem("CHORD WID"));
-    table_1->setItem(2,1,new QTableWidgetItem("CHORD WID"));
-    table_1->setItem(2,2,new QTableWidgetItem("STACK T"));
-    table_1->setItem(2,3,new QTableWidgetItem("STACK X"));
-    table_1->setItem(2,4,new QTableWidgetItem("STACK Y"));
-    table_1->setItem(4,0,new QTableWidgetItem("TWIST ANG"));
-    table_1->setItem(4,1,new QTableWidgetItem("CV 最小值"));
-    table_1->setItem(4,2,new QTableWidgetItem("CV 最大值"));
-    table_1->setItem(4,3,new QTableWidgetItem("CC 最小值"));
-    table_1->setItem(4,4,new QTableWidgetItem("CC 最大值"));
-    table_1->setItem(6,0,new QTableWidgetItem("LE 最小值"));
-    table_1->setItem(6,1,new QTableWidgetItem("LE 最大值"));
-    table_1->setItem(6,2,new QTableWidgetItem("TE 最小值"));
-    table_1->setItem(6,3,new QTableWidgetItem("TE 最大值"));
-    table_1->setItem(6,4,new QTableWidgetItem("BOW 总数"));
+    table_1->setItem(1,0,new QTableWidgetItem("TE RADIUS"));
+    table_1->setItem(2,0,new QTableWidgetItem("LE THICK"));
+    table_1->setItem(3,0,new QTableWidgetItem("TE THICK"));
+    table_1->setItem(4,0,new QTableWidgetItem("MAC THICK"));
+    table_1->setItem(5,0,new QTableWidgetItem("CHORD WID"));
+    table_1->setItem(6,0,new QTableWidgetItem("CHORD WID"));
+    table_1->setItem(7,0,new QTableWidgetItem("STACK T"));
+    table_1->setItem(8,0,new QTableWidgetItem("STACK X"));
+    table_1->setItem(9,0,new QTableWidgetItem("STACK Y"));
+    table_1->setItem(10,0,new QTableWidgetItem("TWIST ANG"));
+    table_1->setItem(11,0,new QTableWidgetItem("CV 最小值"));
+    table_1->setItem(12,0,new QTableWidgetItem("CV 最大值"));
+    table_1->setItem(13,0,new QTableWidgetItem("CC 最小值"));
+    table_1->setItem(14,0,new QTableWidgetItem("CC 最大值"));
+    table_1->setItem(15,0,new QTableWidgetItem("LE 最小值"));
+    table_1->setItem(16,0,new QTableWidgetItem("LE 最大值"));
+    table_1->setItem(17,0,new QTableWidgetItem("TE 最小值"));
+    table_1->setItem(18,0,new QTableWidgetItem("TE 最大值"));
+    table_1->setItem(19,0,new QTableWidgetItem("BOW 总数"));
+    for(int rows=0;rows<20;rows++)
+        {
+              table_1->item(rows,0)->setTextColor(QColor(255,255,255));//设置文本颜色
+            }
+
+
 
     table_2->setColumnCount(7);//设置列数
     table_2->setRowCount(5);//设置行数
     table_2->setShowGrid(true);                //设置显示格子线
+    table_2->setStyleSheet("gridline-color: rgb(255, 255, 255)");
     table_2->resizeColumnsToContents();//根据内容自动改变列的大小
     table_2->resizeRowsToContents();//根据内容自动改变行的大小
     table_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);// 自适应所有列，让它布满空间
     table_2->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);// 自适应所有行，让它布满空间
+    table_2->setFont(QFont("song", 12));//所有单元格的字体  设置成一样
+    table_2->horizontalHeader()->setStyleSheet("QHeaderView::section{background:blue;}");
+    table_2->setSelectionMode(QAbstractItemView::NoSelection);//设置表格不可被选中
     table_2->setItem(0,0,new QTableWidgetItem("边"));
     table_2->setItem(0,1,new QTableWidgetItem("加权"));
     table_2->setItem(0,2,new QTableWidgetItem("最小偏差"));
@@ -500,10 +520,15 @@ void MainWindow::inittable(){
     table_2->setItem(2,0,new QTableWidgetItem("CCV"));
     table_2->setItem(3,0,new QTableWidgetItem("LE"));
     table_2->setItem(4,0,new QTableWidgetItem("TE"));
-
-
-
-
+    for(int rows=0;rows<5;rows++)
+        {
+          table_2->item(rows,0)->setTextColor(QColor(255,255,255));//设置文本颜色
+            }
+    for(int columns=0;columns<7;columns++)
+    {
+      table_2->item(0,columns)->setTextColor(QColor(255,255,255));//设置文本颜色
+    }
+   table_2->setStyleSheet("gridline-color: rgb(255, 255, 255)");
 }
 void MainWindow::getinformation(){
     inf.section=select_z->currentText();
@@ -561,26 +586,30 @@ void MainWindow::getinformation(){
 void MainWindow::settable(){
 
     getinformation();
-    table_1->setItem(1,0,new QTableWidgetItem(inf.LE_RADIUS));
+    table_1->setItem(0,1,new QTableWidgetItem(inf.LE_RADIUS));
     table_1->setItem(1,1,new QTableWidgetItem(inf.TE_RADIUS));
-    table_1->setItem(1,2,new QTableWidgetItem(inf.LE_THICK));
-    table_1->setItem(1,3,new QTableWidgetItem(inf.TE_THICK));
-    table_1->setItem(1,4,new QTableWidgetItem(inf.MAC_THICK));
-    table_1->setItem(3,0,new QTableWidgetItem(inf.CHORD_WID));
-    table_1->setItem(3,1,new QTableWidgetItem(inf.CHORD_WID));
-    table_1->setItem(3,2,new QTableWidgetItem(inf.STACK_T));
-    table_1->setItem(3,3,new QTableWidgetItem(inf.STACK_X));
-    table_1->setItem(3,4,new QTableWidgetItem(inf.STACK_Y));
-    table_1->setItem(5,0,new QTableWidgetItem(inf.TWIST_ANG));
-    table_1->setItem(5,1,new QTableWidgetItem(inf.CV_CONT_MAX));
-    table_1->setItem(5,2,new QTableWidgetItem(inf.CV_CONT_MIN));
-    table_1->setItem(5,3,new QTableWidgetItem(inf.CC_CONT_MAX));
-    table_1->setItem(5,4,new QTableWidgetItem(inf.CC_CONT_MIN));
-    table_1->setItem(7,0,new QTableWidgetItem(inf.LE_CONT_MAX));
-    table_1->setItem(7,1,new QTableWidgetItem(inf.LE_CONT_MIN));
-    table_1->setItem(7,2,new QTableWidgetItem(inf.TE_CONT_MAX));
-    table_1->setItem(7,3,new QTableWidgetItem(inf.TE_CONT_MIN));
-    table_1->setItem(7,4,new QTableWidgetItem(inf.BOW_AMOUNT));
+    table_1->setItem(2,1,new QTableWidgetItem(inf.LE_THICK));
+    table_1->setItem(3,1,new QTableWidgetItem(inf.TE_THICK));
+    table_1->setItem(4,1,new QTableWidgetItem(inf.MAC_THICK));
+    table_1->setItem(5,1,new QTableWidgetItem(inf.CHORD_WID));
+    table_1->setItem(6,1,new QTableWidgetItem(inf.CHORD_WID));
+    table_1->setItem(7,1,new QTableWidgetItem(inf.STACK_T));
+    table_1->setItem(8,1,new QTableWidgetItem(inf.STACK_X));
+    table_1->setItem(9,1,new QTableWidgetItem(inf.STACK_Y));
+    table_1->setItem(10,1,new QTableWidgetItem(inf.TWIST_ANG));
+    table_1->setItem(11,1,new QTableWidgetItem(inf.CV_CONT_MAX));
+    table_1->setItem(12,1,new QTableWidgetItem(inf.CV_CONT_MIN));
+    table_1->setItem(13,1,new QTableWidgetItem(inf.CC_CONT_MAX));
+    table_1->setItem(14,1,new QTableWidgetItem(inf.CC_CONT_MIN));
+    table_1->setItem(15,1,new QTableWidgetItem(inf.LE_CONT_MAX));
+    table_1->setItem(16,1,new QTableWidgetItem(inf.LE_CONT_MIN));
+    table_1->setItem(17,1,new QTableWidgetItem(inf.TE_CONT_MAX));
+    table_1->setItem(18,1,new QTableWidgetItem(inf.TE_CONT_MIN));
+    table_1->setItem(19,1,new QTableWidgetItem(inf.BOW_AMOUNT));
+    for(int rows=0;rows<20;rows++)
+        {
+               table_1->item(rows,1)->setTextColor(QColor(255,255,255));//设置文本颜色
+            }
 
 
 
@@ -608,5 +637,15 @@ void MainWindow::settable(){
     table_2->setItem(4,4,new QTableWidgetItem(inf.TE_SHAPE));
     table_2->setItem(4,5,new QTableWidgetItem(inf.TE_MEAN));
     table_2->setItem(4,6,new QTableWidgetItem(inf.TE_STANDARD));
+    for(int rows=0;rows<5;rows++)
+        {
+            for(int columns=0;columns<7;columns++)
+            {
+              table_2->item(rows,columns)->setTextColor(QColor(255,255,255));//设置文本颜色
+            }
+            }
+
+
+
 }
 
